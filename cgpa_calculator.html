@@ -1,0 +1,605 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .cgpa-app {
+    font-family: 'DM Sans', sans-serif;
+    background: #0d1117;
+    min-height: 100vh;
+    padding: 2rem 1rem 3rem;
+    color: #e8e0cc;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.2rem;
+    color: #f0e6c8;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+  }
+
+  .header h1 em {
+    font-style: italic;
+    color: #c9a84c;
+  }
+
+  .header p {
+    font-size: 13px;
+    color: #6e6a5e;
+    margin-top: 6px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .divider {
+    width: 48px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #c9a84c, transparent);
+    margin: 12px auto 0;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+    max-width: 680px;
+    margin: 0 auto 1.5rem;
+  }
+
+  .sem-card {
+    background: #161b22;
+    border: 0.5px solid #2a2720;
+    border-radius: 10px;
+    padding: 14px 16px;
+    transition: border-color 0.2s;
+  }
+
+  .sem-card:focus-within {
+    border-color: #c9a84c;
+  }
+
+  .sem-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: #6e6a5e;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .sem-badge {
+    width: 20px;
+    height: 20px;
+    background: #1e2430;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: #c9a84c;
+    border: 0.5px solid #2e2a24;
+  }
+
+  .sem-input {
+    width: 100%;
+    background: #0d1117;
+    border: 0.5px solid #2a2720;
+    border-radius: 7px;
+    color: #f0e6c8;
+    font-family: 'DM Mono', monospace;
+    font-size: 1.25rem;
+    font-weight: 500;
+    padding: 10px 12px;
+    outline: none;
+    transition: border-color 0.2s, color 0.2s;
+    -moz-appearance: textfield;
+  }
+
+  .sem-input::-webkit-outer-spin-button,
+  .sem-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+  .sem-input:focus {
+    border-color: #c9a84c;
+  }
+
+  .sem-input::placeholder {
+    color: #3a3830;
+  }
+
+  .sem-input.filled {
+    color: #c9a84c;
+  }
+
+  .result-bar {
+    max-width: 680px;
+    margin: 0 auto 1.5rem;
+    background: #161b22;
+    border: 0.5px solid #2a2720;
+    border-radius: 12px;
+    padding: 1.5rem 1.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .result-item {
+    text-align: center;
+  }
+
+  .result-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: #6e6a5e;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 4px;
+  }
+
+  .result-value {
+    font-family: 'DM Mono', monospace;
+    font-size: 2.4rem;
+    font-weight: 500;
+    color: #c9a84c;
+    line-height: 1;
+  }
+
+  .result-value.na {
+    font-size: 1.2rem;
+    color: #3a3830;
+  }
+
+  .result-divider {
+    width: 0.5px;
+    height: 48px;
+    background: #2a2720;
+  }
+
+  .grade-badge {
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    background: #1e2430;
+    border: 0.5px solid #2a2720;
+    color: #6e6a5e;
+    margin-top: 4px;
+    transition: all 0.3s;
+  }
+
+  .grade-badge.active {
+    background: #1e180c;
+    border-color: #c9a84c50;
+    color: #c9a84c;
+  }
+
+  .progress-wrap {
+    max-width: 680px;
+    margin: 0 auto 1.5rem;
+  }
+
+  .progress-track {
+    height: 4px;
+    background: #1e2020;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #7a5c18, #c9a84c);
+    border-radius: 2px;
+    transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    width: 0%;
+  }
+
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    font-size: 11px;
+    color: #6e6a5e;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .predictor {
+    max-width: 680px;
+    margin: 0 auto;
+    background: #161b22;
+    border: 0.5px solid #2a2720;
+    border-radius: 12px;
+    padding: 1.5rem 1.75rem;
+  }
+
+  .predictor-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    color: #f0e6c8;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .predictor-title i {
+    font-size: 16px;
+    color: #c9a84c;
+  }
+
+  .predictor-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .pred-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1;
+    min-width: 120px;
+  }
+
+  .pred-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: #6e6a5e;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+  }
+
+  .pred-input {
+    background: #0d1117;
+    border: 0.5px solid #2a2720;
+    border-radius: 7px;
+    color: #f0e6c8;
+    font-family: 'DM Mono', monospace;
+    font-size: 1rem;
+    padding: 9px 12px;
+    outline: none;
+    transition: border-color 0.2s;
+    -moz-appearance: textfield;
+    width: 100%;
+  }
+
+  .pred-input::-webkit-outer-spin-button,
+  .pred-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+  .pred-input:focus { border-color: #c9a84c; }
+
+  .pred-result {
+    flex: 1;
+    min-width: 140px;
+    background: #0d1117;
+    border: 0.5px solid #2a2720;
+    border-radius: 7px;
+    padding: 9px 12px;
+    text-align: center;
+  }
+
+  .pred-result-label {
+    font-size: 10px;
+    color: #6e6a5e;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    font-weight: 500;
+  }
+
+  .pred-result-val {
+    font-family: 'DM Mono', monospace;
+    font-size: 1.3rem;
+    color: #c9a84c;
+    font-weight: 500;
+    margin-top: 2px;
+  }
+
+  .pred-result-val.warn { color: #d4784a; }
+  .pred-result-val.impossible { color: #a33d3d; font-size: 0.85rem; }
+  .pred-result-val.na { color: #3a3830; font-size: 0.9rem; }
+
+  .pred-note {
+    margin-top: 12px;
+    font-size: 12px;
+    color: #6e6a5e;
+    font-style: italic;
+    border-top: 0.5px solid #1e2020;
+    padding-top: 12px;
+    line-height: 1.6;
+  }
+
+  .semester-dots {
+    display: flex;
+    gap: 4px;
+    margin: 0 auto 1.5rem;
+    max-width: 680px;
+    justify-content: flex-end;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #2a2720;
+    transition: background 0.3s;
+  }
+
+  .dot.active { background: #c9a84c; }
+
+  .clear-btn {
+    display: block;
+    margin: 1rem auto 0;
+    background: transparent;
+    border: 0.5px solid #2a2720;
+    border-radius: 7px;
+    color: #6e6a5e;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .clear-btn:hover { border-color: #6e6a5e; color: #e8e0cc; }
+</style>
+
+<div class="cgpa-app">
+  <h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden">CGPA Calculator — enter SGPA for each semester to calculate cumulative GPA and predict required grades</h2>
+
+  <div class="header">
+    <h1>CGPA <em>Calculator</em></h1>
+    <p>Cumulative Grade Point Average</p>
+    <div class="divider"></div>
+  </div>
+
+  <div class="grid" id="semGrid"></div>
+
+  <div class="semester-dots" id="dots"></div>
+
+  <div class="result-bar">
+    <div class="result-item">
+      <div class="result-label">Current CGPA</div>
+      <div class="result-value" id="cgpaVal">—</div>
+    </div>
+    <div class="result-divider"></div>
+    <div class="result-item">
+      <div class="result-label">Semesters done</div>
+      <div class="result-value" id="semsDone">0</div>
+    </div>
+    <div class="result-divider"></div>
+    <div class="result-item">
+      <div class="result-label">Grade</div>
+      <div class="grade-badge" id="gradeBadge">—</div>
+    </div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <div class="progress-info">
+      <span>0.0</span>
+      <span id="progressLabel">No data yet</span>
+      <span>10.0</span>
+    </div>
+  </div>
+
+  <div class="predictor">
+    <div class="predictor-title">
+      <i class="ti ti-target" aria-hidden="true"></i>
+      Target CGPA planner
+    </div>
+    <div class="predictor-row">
+      <div class="pred-group">
+        <div class="pred-label">Target CGPA</div>
+        <input type="number" class="pred-input" id="targetCgpa" placeholder="e.g. 8.5" min="0" max="10" step="0.01">
+      </div>
+      <div class="pred-group">
+        <div class="pred-label">Total semesters</div>
+        <input type="number" class="pred-input" id="totalSems" placeholder="e.g. 8" min="1" max="8" step="1" value="8">
+      </div>
+      <div class="pred-result">
+        <div class="pred-result-label">Required SGPA</div>
+        <div class="pred-result-val na" id="predResult">—</div>
+      </div>
+    </div>
+    <div class="pred-note" id="predNote">Enter your target CGPA and total semesters to see the SGPA you'll need in remaining semesters.</div>
+  </div>
+
+  <button class="clear-btn" onclick="clearAll()">Clear all</button>
+</div>
+
+<script>
+const NUM_SEMS = 8;
+const sgpaVals = new Array(NUM_SEMS).fill('');
+
+function getGradeLabel(cgpa) {
+  if (cgpa >= 9.0) return 'Outstanding';
+  if (cgpa >= 8.0) return 'Excellent';
+  if (cgpa >= 7.0) return 'Very Good';
+  if (cgpa >= 6.0) return 'Good';
+  if (cgpa >= 5.0) return 'Average';
+  return 'Below Average';
+}
+
+function buildGrid() {
+  const grid = document.getElementById('semGrid');
+  const dots = document.getElementById('dots');
+  grid.innerHTML = '';
+  dots.innerHTML = '';
+  for (let i = 0; i < NUM_SEMS; i++) {
+    const card = document.createElement('div');
+    card.className = 'sem-card';
+    card.innerHTML = `
+      <div class="sem-label">
+        Semester
+        <div class="sem-badge">${i + 1}</div>
+      </div>
+      <input
+        type="number"
+        class="sem-input"
+        id="sem${i}"
+        placeholder="0.0 – 10.0"
+        min="0" max="10" step="0.01"
+        value="${sgpaVals[i]}"
+        oninput="onInput(${i}, this.value)"
+        aria-label="SGPA for semester ${i + 1}"
+      >
+    `;
+    if (sgpaVals[i] !== '') {
+      card.querySelector('input').classList.add('filled');
+    }
+    grid.appendChild(card);
+
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (sgpaVals[i] !== '' ? ' active' : '');
+    dot.id = `dot${i}`;
+    dots.appendChild(dot);
+  }
+}
+
+function onInput(idx, val) {
+  sgpaVals[idx] = val;
+  const input = document.getElementById(`sem${idx}`);
+  const dot = document.getElementById(`dot${idx}`);
+  if (val !== '') {
+    input.classList.add('filled');
+    dot.classList.add('active');
+  } else {
+    input.classList.remove('filled');
+    dot.classList.remove('active');
+  }
+  recalc();
+}
+
+function recalc() {
+  const entered = sgpaVals.filter(v => v !== '' && v !== null && !isNaN(parseFloat(v)));
+  const count = entered.length;
+  const cgpaEl = document.getElementById('cgpaVal');
+  const semsEl = document.getElementById('semsDone');
+  const gradeEl = document.getElementById('gradeBadge');
+  const progress = document.getElementById('progressFill');
+  const progressLbl = document.getElementById('progressLabel');
+
+  semsEl.textContent = count;
+
+  if (count === 0) {
+    cgpaEl.textContent = '—';
+    cgpaEl.classList.remove('active');
+    gradeEl.textContent = '—';
+    gradeEl.classList.remove('active');
+    progress.style.width = '0%';
+    progressLbl.textContent = 'No data yet';
+    updatePredictor(null, count);
+    return;
+  }
+
+  const sum = entered.reduce((a, b) => a + parseFloat(b), 0);
+  const cgpa = sum / count;
+  cgpaEl.textContent = cgpa.toFixed(2);
+  gradeEl.textContent = getGradeLabel(cgpa);
+  gradeEl.classList.add('active');
+
+  const pct = Math.min((cgpa / 10) * 100, 100);
+  progress.style.width = pct.toFixed(1) + '%';
+  progressLbl.textContent = `${cgpa.toFixed(2)} / 10.00`;
+
+  updatePredictor(cgpa, count);
+}
+
+function updatePredictor(currentCgpa, filledCount) {
+  const targetEl = document.getElementById('targetCgpa');
+  const totalEl = document.getElementById('totalSems');
+  const resultEl = document.getElementById('predResult');
+  const noteEl = document.getElementById('predNote');
+
+  const target = parseFloat(targetEl.value);
+  const total = parseInt(totalEl.value);
+
+  if (isNaN(target) || isNaN(total)) {
+    resultEl.textContent = '—';
+    resultEl.className = 'pred-result-val na';
+    noteEl.textContent = 'Enter your target CGPA and total semesters to see the SGPA you\'ll need in remaining semesters.';
+    return;
+  }
+
+  if (target < 0 || target > 10) {
+    resultEl.textContent = 'Invalid';
+    resultEl.className = 'pred-result-val impossible';
+    noteEl.textContent = 'Target CGPA must be between 0 and 10.';
+    return;
+  }
+
+  const remaining = total - filledCount;
+
+  if (remaining <= 0) {
+    if (currentCgpa !== null) {
+      const met = currentCgpa >= target;
+      resultEl.textContent = met ? '✓ Achieved' : '✗ Missed';
+      resultEl.className = 'pred-result-val' + (met ? '' : ' impossible');
+      noteEl.textContent = met
+        ? `Your current CGPA of ${currentCgpa.toFixed(2)} meets or exceeds the target of ${target.toFixed(2)}.`
+        : `Your current CGPA of ${currentCgpa.toFixed(2)} is below the target of ${target.toFixed(2)} with no semesters remaining.`;
+    } else {
+      resultEl.textContent = '—';
+      resultEl.className = 'pred-result-val na';
+      noteEl.textContent = 'No semesters remaining.';
+    }
+    return;
+  }
+
+  const currentSum = currentCgpa !== null ? currentCgpa * filledCount : 0;
+  const neededSum = target * total;
+  const requiredSumRemaining = neededSum - currentSum;
+  const requiredSgpa = requiredSumRemaining / remaining;
+
+  if (requiredSgpa > 10) {
+    resultEl.textContent = 'Not possible';
+    resultEl.className = 'pred-result-val impossible';
+    noteEl.textContent = `Even with a perfect 10.0 in all ${remaining} remaining semester${remaining > 1 ? 's' : ''}, achieving ${target.toFixed(2)} is not mathematically possible.`;
+  } else if (requiredSgpa < 0) {
+    resultEl.textContent = 'Already met';
+    resultEl.className = 'pred-result-val';
+    noteEl.textContent = `Your current CGPA already exceeds the target. You're on track!`;
+  } else {
+    resultEl.textContent = requiredSgpa.toFixed(2);
+    resultEl.className = 'pred-result-val' + (requiredSgpa >= 9 ? ' warn' : '');
+    const emoji = requiredSgpa <= 7 ? 'Achievable' : requiredSgpa <= 8.5 ? 'Challenging' : 'Very difficult';
+    noteEl.textContent = `You need ${requiredSgpa.toFixed(2)} average SGPA across the ${remaining} remaining semester${remaining > 1 ? 's' : ''}. ${emoji}.`;
+  }
+}
+
+function clearAll() {
+  for (let i = 0; i < NUM_SEMS; i++) sgpaVals[i] = '';
+  document.getElementById('targetCgpa').value = '';
+  document.getElementById('totalSems').value = '8';
+  buildGrid();
+  recalc();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  buildGrid();
+  recalc();
+  document.getElementById('targetCgpa').addEventListener('input', recalc);
+  document.getElementById('totalSems').addEventListener('input', recalc);
+});
+</script>
